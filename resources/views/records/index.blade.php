@@ -1,0 +1,264 @@
+@extends('adminlte::page')
+
+@section('title', 'Dashboard')
+
+@section('content_header')
+    <h1>Realizar Factura</h1>
+@stop
+
+@section('content')
+
+
+<nav class="navbar navbar-dark bg-dark">
+
+<span class="navbar-brand mb-0 h1"></span>
+</nav>
+
+ <!-- DataTales Example -->
+ <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Medicinas</h6>
+    </div>
+    
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                       
+                        
+                       
+                    </tr>
+                </thead>
+
+                <tbody>
+                      @foreach ( $medicines as $medicine )  
+                 
+                 
+                   
+                        <tr>
+                            <td>
+                                <div   
+                                      id="Chocolate" class="photo"  data-toggle="modal" data-target="#exampleModal">
+                                        {{$medicine->id}}
+                                </div>
+                             </td>
+                            <td>{{$medicine->code}}</td>
+                            <td>{{$medicine->name}}</td>
+                            <td>{{$medicine->quantity}}</td>
+                            <td>{{$medicine->price}}</td>
+                        <tr>   
+                        @endforeach  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-6">
+    <div class="container">
+        <div class="list-group-item list-group-item-action active">AddProducts</div>
+        <table id="tbl-item" class="table table-dark table-bordered" cellpadding="0" cellspacing="0" width="100%" align="center">
+            <thead>
+
+            <tr>
+                <th>Delete</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+            </tr>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<div class="col-sm-3">
+    <div class="list-group-item list-group-item-action active">Bill</div> 
+    <div>
+        <label>Total</label>
+        <input type="text" style="color: yellow; background: black; font-size: 30px;" id="total" name="total" placeholder="Total" required>
+
+        
+    </div>
+    </br>
+
+    <div>
+        <input type="button" class="btn btn-warning" value="reset" name="reset" id="reset">
+        <button type="button" class="btn btn-dark"><i class="fas fa-print">Imprimir Factura</i></button>
+        
+    </div>
+    
+
+   
+
+</div>
+      
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Qty</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <input type="number" style="color: yellow; background: black; font-size: 30px;" id="qty" name="qty" placeholder="Qty" required>
+            </div>
+        </div>
+
+
+
+
+        <div class="modal-footer">
+            <input type="button" class="btn btn-info" value="Add" name="add" id="add" onclick="add()">
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="{{asset('vendor/jquery/jquery.js')}}"></script>
+
+<script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>
+
+<script type="text/javascript">
+
+var total = 0;
+var tot = 0;
+
+var item = null;
+var price = 0;
+
+
+var a = "";
+
+$("id").on("click",function()
+    {
+
+        a = $(this).prop('id')
+
+    });
+
+
+function add()
+{
+    if(a == "Chocolate")
+    {
+
+        item = "Chocolate";
+        price = 32;
+
+
+    }
+    else if(a == "Mango")
+    {
+        item = "Mango";
+        price = 35;
+
+    }
+    else if(a == "Venila")
+    {
+        item = "Venila";
+        price = 40;
+
+    }
+    else if(a == "Strawberry")
+    {
+        item = "Strawberry";
+        price = 45;
+
+    }
+
+    else if(a == "MixFruit")
+    {
+        item = "Strawberry";
+        price = 35;
+
+    }
+
+    var qty = $('#qty').val();
+    tot = qty * price;
+
+    var table1 =
+
+        "<tr>" +
+        "<td><button type='button' name='record' class='btn btn-warning' onclick='deleterow(this)'>Delete</td>" +
+        "<td>" + item    +  "</td>" +
+        "<td>" + price    +  "</td>" +
+
+        "<td>" + qty    +  "</td>" +
+
+        "<td>" + tot    +  "</td>" +
+
+        "</tr>" ;
+
+
+    total += Number(tot);
+    $('#total').val(total);
+
+
+    $("table tbody").append(table1);
+    $("exampleModal").modal('toggle');
+    $('#qty').val("1");
+
+
+}
+
+function deleterow(e)
+{
+    total_cost = parseInt($(e).parent().parent().find('td:last').text(),10);
+    total -= total_cost;
+    $('#total').val(total);
+    $(e).parent().parent().remove();
+
+
+
+}
+
+$('#reset').click(function()
+{
+    location.reload();
+});
+
+</script>
+ 
+
+
+@section('css')
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+             
+@stop
+
+@section('js')
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+@stop
+
+
+ 
+@stop
+
+@section('css')
+    <link rel="stylesheet" href="/css/admin_custom.css">
+@stop
+
+@section('js')
+    <script> console.log('Hi!'); </script>
+@stop   
